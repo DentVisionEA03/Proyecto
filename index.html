@@ -1,13 +1,438 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>proyecto-dentvision</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DentVision - Salud Dental y Visual</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #00a8b5;
+            --secondary: #004d84;
+            --dark: #333;
+            --light: #f4f7f6;
+            --white: #ffffff;
+            --header-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        /* Clase para el Modo Contraste que activaremos con JS */
+        body.high-contrast {
+            --primary: #ffff00;
+            --secondary: #ffffff;
+            --dark: #000000;
+            --light: #000000;
+            --white: #000000;
+            --header-bg: #000000;
+            color: #fff !important;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--light);
+            transition: background 0.3s ease;
+        }
+
+        /* Accesibilidad */
+        .acc-bar {
+            background: #222;
+            color: white;
+            display: flex;
+            justify-content: flex-end;
+            padding: 8px 5%;
+            gap: 15px;
+            font-size: 11px;
+        }
+
+        .acc-btn {
+            cursor: pointer;
+            border: 1px solid #555;
+            background: none;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+        }
+
+        /* Header */
+        header {
+            background: var(--header-bg);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+
+        header.scrolled {
+            padding: 10px 5%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--secondary);
+            text-decoration: none;
+        }
+
+        .logo span { color: var(--primary); }
+
+        /* Navegación */
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+            margin: 0;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Botón hamburguesa (oculto en desktop) */
+        .burger {
+            display: none;
+            cursor: pointer;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .burger div {
+            width: 25px;
+            height: 3px;
+            background-color: var(--secondary);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 50vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            background: linear-gradient(135deg, rgba(0,77,132,0.1) 0%, rgba(0,168,181,0.1) 100%);
+        }
+
+        .hero h1 {
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        .btn-principal {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+
+        .btn-principal:hover {
+            background-color: var(--secondary);
+        }
+
+        /* Sección de Servicios */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            padding: 60px 5%;
+            background: var(--white);
+        }
+
+        .feature-card {
+            background: var(--light);
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card h3 {
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+
+        /* Sección de Estadísticas */
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            background: var(--secondary);
+            color: var(--white);
+            padding: 50px 5%;
+            text-align: center;
+            gap: 30px;
+        }
+
+        .stat-box h2 {
+            font-size: 42px;
+            margin: 0 0 5px 0;
+            color: var(--primary);
+        }
+
+        /* Footer */
+        footer {
+            background: #2c3e50;
+            color: var(--white);
+            padding: 50px 5% 20px;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .footer-col {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .footer-col h4 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .footer-col p, .footer-col ul {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 8px;
+        }
+
+        .footer-col ul li a {
+            color: #ddd;
+            text-decoration: none;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid #444;
+            padding-top: 20px;
+            font-size: 13px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                right: -100%;
+                top: 80px;
+                flex-direction: column;
+                background: var(--white);
+                width: 100%;
+                text-align: center;
+                transition: 0.4s;
+                padding: 40px 0;
+                box-shadow: 0 10px 10px rgba(0,0,0,0.1);
+            }
+            .nav-links.active { right: 0; }
+            .burger { display: flex; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-container" style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f7f6;">
+        <form id="loginForm" onsubmit="handleLogin(event)" style="background: #ffffff; padding: 40px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px;">
+            <h2 style="text-align: center; color: #004d84; margin-bottom: 25px;">
+                Dent<span>Vision</span> - Iniciar Sesión
+            </h2>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="font-size: 14px; color: #333;">Correo Electrónico</label>
+                <input type="email" id="userEmail" required placeholder="ejemplo@dentvision.com" style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc; box-sizing: border-box;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="font-size: 14px; color: #333;">Contraseña</label>
+                <input type="password" id="userPassword" required placeholder="••••••••" style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc; box-sizing: border-box;">
+            </div>
+
+            <button type="submit" style="width: 100%; padding: 12px; background-color: #00a8b5; color: #ffffff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 10px;">
+                Iniciar Sesión
+            </button>
+        </form>
+    </div>
+
+    <div id="main-app" style="display: none;">
+        <div class="acc-bar">
+            <button class="acc-btn" onclick="toggleContrast()">Alto Contraste</button>
+            <button class="acc-btn" onclick="changeFontSize(1)">A+</button>
+            <button class="acc-btn" onclick="changeFontSize(-1)">A-</button>
+            <button class="acc-btn" onclick="handleLogout()" style="background: #e74c3c; border: none;">Salir</button>
+        </div>
+
+        <header id="main-header">
+            <a href="#" class="logo">DENT<span>VISION</span></a>
+            
+            <ul class="nav-links" id="nav-menu">
+                <li><a href="#">Inicio</a></li>
+                <li><a href="#">Servicios</a></li>
+                <li><a href="#">Especialistas</a></li>
+                <li><a href="#">Contacto</a></li>
+            </ul>
+
+            <div class="burger" onclick="toggleMenu()">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </header>
+
+        <section class="hero">
+            <h1>Innovación en salud dental y visual</h1>
+            <p>Atención integral y de calidad para toda tu familia en un solo lugar.</p>
+            <a href="#" class="btn-principal" onclick="alert('Funcionalidad de agenda de citas')">Agenda tu cita</a>
+        </section>
+
+        <section class="features">
+            <div class="feature-card">
+                <h3>Salud Dental</h3>
+                <p>Odontología general, ortodoncia y estética dental con tecnología de vanguardia y profesionales calificados.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Salud Visual</h3>
+                <p>Exámenes de optometría, diagnóstico preventivo y un amplio catálogo de monturas para todas las edades.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Atención sin Esperas</h3>
+                <p>Accede directamente a especialistas de forma rápida y sin trámites complejos.</p>
+            </div>
+        </section>
+
+        <section class="stats">
+            <div class="stat-box">
+                <h2>+50K</h2>
+                <p>Pacientes Atendidos</p>
+            </div>
+            <div class="stat-box">
+                <h2>+120</h2>
+                <p>Especialistas Aliados</p>
+            </div>
+            <div class="stat-box">
+                <h2>15</h2>
+                <p>Sedes a nivel nacional</p>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h4>DentVision</h4>
+                    <p>Nos dedicamos a cuidar de tu sonrisa y de tu vista, combinando innovación y calidad humana.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Enlaces rápidos</h4>
+                    <ul>
+                        <li><a href="#">Inicio</a></li>
+                        <li><a href="#">Nuestros Servicios</a></li>
+                        <li><a href="#">Directorio de Especialistas</a></li>
+                        <li><a href="#">Preguntas Frecuentes</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contáctanos</h4>
+                    <p>Email: Admin@DentVision.com<br>Teléfono: +57 (601) 123 4567</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 DentVision. Todos los derechos reservados.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // 1. FUNCIÓN PARA EL INICIO DE SESIÓN
+        function handleLogin(event) {
+            event.preventDefault(); // Evita recargar la página
+
+            const email = document.getElementById('userEmail').value;
+            const pass = document.getElementById('userPassword').value;
+
+            // Simulación de credenciales de acceso
+            if (email === 'Admin@dentvision.com' && pass === '123456') {
+                alert('¡Inicio de sesión exitoso!');
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('main-app').style.display = 'block';
+            } else {
+                alert('Credenciales incorrectas. Usa:\nEmail: Admin@dentvision.com\nContraseña: 123456');
+            }
+        }
+
+        // 2. FUNCIÓN PARA CERRAR SESIÓN
+        function handleLogout() {
+            document.getElementById('main-app').style.display = 'none';
+            document.getElementById('login-container').style.display = 'flex';
+
+            // Limpia el formulario
+            document.getElementById('userEmail').value = '';
+            document.getElementById('userPassword').value = '';
+        }
+
+        // 3. FUNCIÓN PARA EL MENÚ MÓVIL
+        function toggleMenu() {
+            const menu = document.getElementById('nav-menu');
+            menu.classList.toggle('active');
+        }
+
+        // 4. FUNCIÓN PARA EL MODO CONTRASTE
+        function toggleContrast() {
+            document.body.classList.toggle('high-contrast');
+            const isDark = document.body.classList.contains('high-contrast');
+            localStorage.setItem('contrastMode', isDark);
+        }
+
+        // 5. CAMBIAR TAMAÑO DE FUENTE
+        let currentSize = 16;
+        function changeFontSize(action) {
+            currentSize += (action * 2);
+            document.body.style.fontSize = currentSize + 'px';
+        }
+
+        // 6. EFECTO AL HACER SCROLL (Sticky Header)
+        window.onscroll = function() {
+            const header = document.getElementById('main-header');
+            if (window.pageYOffset > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        };
+
+        // 7. COMPROBAR PREFERENCIAS AL CARGAR
+        window.onload = function() {
+            if (localStorage.getItem('contrastMode') === 'true') {
+                document.body.classList.add('high-contrast');
+            }
+        };
+    </script>
+</body>
 </html>
