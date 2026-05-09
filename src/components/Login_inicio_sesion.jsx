@@ -50,10 +50,15 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative bg-[url('https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d')] bg-cover bg-center">
-      
+    <div
+      className="min-h-screen flex items-center justify-center relative bg-cover bg-center"
+      style={{
+        backgroundImage:
+          "url('https://images.unsplash.com/photo-1606811841689-23db3c432bda?auto=format&fit=crop&w=1600&q=80')",
+      }}
+    >
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/60 to-blue-900/50 backdrop-blur-sm"></div>
 
       {/* Card */}
       <div className="relative z-10 w-[350px] p-8 rounded-2xl bg-white/10 backdrop-blur-xl shadow-2xl text-white animate-fadeIn">
@@ -122,3 +127,4 @@ export default function Login() {
     </div>
   );
 }
+import Login from "./Login_inicio_sesion";

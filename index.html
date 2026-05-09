@@ -97,7 +97,6 @@
             font-size: 14px;
         }
 
-        /* Botón hamburguesa (oculto en desktop) */
         .burger {
             display: none;
             cursor: pointer;
@@ -239,7 +238,6 @@
             font-size: 13px;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .nav-links {
                 position: fixed;
@@ -260,8 +258,9 @@
 </head>
 <body>
 
-    <div id="login-container" style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f7f6;">
-        <form id="loginForm" onsubmit="handleLogin(event)" style="background: #ffffff; padding: 40px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px;">
+    <div id="login-container" style="display: flex; justify-content: center; align-items: center; height: 100vh; background-image: url('https://static.wixstatic.com/media/f7fb83_b253f514baa742f5b8ccf771328a765b~mv2.jpg/v1/fill/w_588,h_330,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/f7fb83_b253f514baa742f5b8ccf771328a765b~mv2.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+        
+        <form id="loginForm" onsubmit="handleLogin(event)" style="background: #f8f8fa; padding: 40px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px;">
             <h2 style="text-align: center; color: #004d84; margin-bottom: 25px;">
                 Dent<span>Vision</span> - Iniciar Sesión
             </h2>
@@ -273,12 +272,55 @@
 
             <div style="margin-bottom: 15px;">
                 <label style="font-size: 14px; color: #333;">Contraseña</label>
-                <input type="password" id="userPassword" required placeholder="••••••••" style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc; box-sizing: border-box;">
+                <div style="position: relative;">
+                    <input type="password" id="userPassword" required placeholder="••••••••" style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc; box-sizing: border-box; padding-right: 40px;">
+                    <span id="togglePassword" onclick="togglePassVisibility('userPassword')" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; user-select: none;">👁️</span>
+                </div>
+            </div>
+
+            <div style="text-align: right; margin-bottom: 15px;">
+                <a href="#" onclick="recoverPassword()" style="font-size: 12px; color: #00a8b5; text-decoration: none;">¿Olvidaste tu contraseña?</a>
             </div>
 
             <button type="submit" style="width: 100%; padding: 12px; background-color: #00a8b5; color: #ffffff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 10px;">
                 Iniciar Sesión
             </button>
+
+            <div style="text-align: center; margin-top: 20px; font-size: 13px; color: #333;">
+                ¿No tienes cuenta? <a href="#" onclick="toggleForms(true)" style="color: #004d84; font-weight: bold; text-decoration: none;">Regístrate aquí</a>
+            </div>
+        </form>
+
+        <form id="registerForm" onsubmit="handleRegister(event)" style="display: none; background: #f8f8fa; padding: 40px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px;">
+            <h2 style="text-align: center; color: #004d84; margin-bottom: 25px;">
+                Dent<span>Vision</span> - Registro
+            </h2>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="font-size: 14px; color: #333;">Nombre Completo</label>
+                <input type="text" id="regName" required placeholder="Tu Nombre" style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc; box-sizing: border-box;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="font-size: 14px; color: #333;">Correo Electrónico</label>
+                <input type="email" id="regEmail" required placeholder="ejemplo@dentvision.com" style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc; box-sizing: border-box;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="font-size: 14px; color: #333;">Contraseña</label>
+                <div style="position: relative;">
+                    <input type="password" id="regPassword" required placeholder="••••••••" style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc; box-sizing: border-box; padding-right: 40px;">
+                    <span id="toggleRegPassword" onclick="togglePassVisibility('regPassword')" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; user-select: none;">👁️</span>
+                </div>
+            </div>
+
+            <button type="submit" style="width: 100%; padding: 12px; background-color: #00a8b5; color: #ffffff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 10px;">
+                Registrarse
+            </button>
+
+            <div style="text-align: center; margin-top: 20px; font-size: 13px; color: #333;">
+                ¿Ya tienes una cuenta? <a href="#" onclick="toggleForms(false)" style="color: #004d84; font-weight: bold; text-decoration: none;">Inicia sesión</a>
+            </div>
         </form>
     </div>
 
@@ -372,12 +414,11 @@
     <script>
         // 1. FUNCIÓN PARA EL INICIO DE SESIÓN
         function handleLogin(event) {
-            event.preventDefault(); // Evita recargar la página
+            event.preventDefault();
 
             const email = document.getElementById('userEmail').value;
             const pass = document.getElementById('userPassword').value;
 
-            // Simulación de credenciales de acceso
             if (email === 'Admin@dentvision.com' && pass === '123456') {
                 alert('¡Inicio de sesión exitoso!');
                 document.getElementById('login-container').style.display = 'none';
@@ -392,32 +433,77 @@
             document.getElementById('main-app').style.display = 'none';
             document.getElementById('login-container').style.display = 'flex';
 
-            // Limpia el formulario
             document.getElementById('userEmail').value = '';
             document.getElementById('userPassword').value = '';
         }
 
-        // 3. FUNCIÓN PARA EL MENÚ MÓVIL
+        // 3. ALTERNAR ENTRE FORMULARIO DE INICIO DE SESIÓN Y REGISTRO
+        function toggleForms(showRegister) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+
+            if (showRegister) {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+            } else {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+            }
+        }
+
+        // 4. MOSTRAR/OCULTAR CONTRASEÑA
+        function togglePassVisibility(id) {
+            const input = document.getElementById(id);
+            const icon = id === 'userPassword' ? document.getElementById('togglePassword') : document.getElementById('toggleRegPassword');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                icon.textContent = '👁️';
+            }
+        }
+
+        // 5. RECUPERAR CONTRASEÑA
+        function recoverPassword() {
+            const email = prompt("Por favor, ingresa tu correo electrónico para recuperar la contraseña:");
+            if (email) {
+                alert("Se enviaron las instrucciones a " + email);
+            }
+        }
+
+        // 6. MANEJO DE REGISTRO
+        function handleRegister(event) {
+            event.preventDefault();
+            const name = document.getElementById('regName').value;
+            alert("¡Registro exitoso, " + name + "! Ahora puedes iniciar sesión.");
+            
+            // Limpia campos y regresa al login
+            document.getElementById('regName').value = '';
+            document.getElementById('regEmail').value = '';
+            document.getElementById('regPassword').value = '';
+            toggleForms(false);
+        }
+
+        // 7. FUNCIONES DE ACCESIBILIDAD Y MENÚ
         function toggleMenu() {
             const menu = document.getElementById('nav-menu');
             menu.classList.toggle('active');
         }
 
-        // 4. FUNCIÓN PARA EL MODO CONTRASTE
         function toggleContrast() {
             document.body.classList.toggle('high-contrast');
             const isDark = document.body.classList.contains('high-contrast');
             localStorage.setItem('contrastMode', isDark);
         }
 
-        // 5. CAMBIAR TAMAÑO DE FUENTE
         let currentSize = 16;
         function changeFontSize(action) {
-            currentSize += (action * 2);
-            document.body.style.fontSize = currentSize + 'px';
+            letSize += (action * 2);
+            document.body.style.fontSize = letSize + 'px';
         }
 
-        // 6. EFECTO AL HACER SCROLL (Sticky Header)
         window.onscroll = function() {
             const header = document.getElementById('main-header');
             if (window.pageYOffset > 50) {
@@ -427,7 +513,6 @@
             }
         };
 
-        // 7. COMPROBAR PREFERENCIAS AL CARGAR
         window.onload = function() {
             if (localStorage.getItem('contrastMode') === 'true') {
                 document.body.classList.add('high-contrast');
