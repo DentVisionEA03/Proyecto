@@ -1,33 +1,27 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState } from "react";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(() =>
+    Boolean(localStorage.getItem("token")),
+  );
 
-  useEffect(() => {
-    // Comprobar si hay un token al cargar la app
-    const token = localStorage.getItem("token");
-    if (token === "fake-jwt") {
-      setIsAuthenticated(true);
-    }
-    setLoading(false);
-  }, []);
-
-  const login = () => {
-    localStorage.setItem("token", "fake-jwt");
+  const login = ({ remember = false } = {}) => {
+    localStorage.setItem("token", `fake-jwt-${Date.now()}`);
+    localStorage.setItem("remember", String(remember));
     setIsAuthenticated(true);
   };
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("remember");
     setIsAuthenticated(false);
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, loading }}>
-      {!loading && children}
+    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+      {children}
     </AuthContext.Provider>
   );
 };

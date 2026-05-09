@@ -1,20 +1,14 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 :root {
-  /* Variables por defecto (Light) */
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  
-  /* Se sobreescribirán dinámicamente en Home.jsx, 
-     pero dejamos estas por seguridad */
-  --accent: #aa3bff;
-  --sans: system-ui, -apple-system, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  --text: #4b5563;
+  --text-h: #111827;
+  --bg: #f4f7f6;
+  --primary: #00a8b5;
+  --secondary: #004d84;
+  --dark: #333;
+  --light: #f4f7f6;
+  --white: #ffffff;
+  --header-bg: rgba(255, 255, 255, 0.95);
+  --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
   font-family: var(--sans);
   background-color: var(--bg);
@@ -25,30 +19,271 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
-  padding: 0;
-  width: 100%;
+  min-width: 320px;
   min-height: 100vh;
-  font-size: 1rem; /* Base relativa */
   line-height: 1.5;
 }
 
-#root {
-  width: 100%;
+button,
+input {
+  font: inherit;
 }
 
-/* Reset de Títulos - Corrección importante */
-h1, h2, h3, h4 {
-  font-family: var(--sans);
-  font-weight: 700;
-  color: var(--text-h);
+button {
+  border: 0;
+}
+
+#root,
+.app-shell {
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
   margin-top: 0;
 }
 
-/* Clases de utilidad de Tailwind o personalizadas */
 .animate-fadeIn {
   animation: fadeIn 0.6s ease-out forwards;
+}
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 24px;
+  background-image: url("../src/assets/pagina\ principal.png");
+  background-size: cover;
+  background-position: center;
+}
+
+
+.login-card {
+  width: min(100%, 370px);
+  position: relative;
+  z-index: 1;
+  padding: 32px;
+  border-radius: 16px;
+  background: rgba(20, 55, 121, 0.12);
+  color: rgb(129, 190, 240);
+  box-shadow: 0 24px 70px rgba(156, 171, 236, 0.32);
+  backdrop-filter: blur(18px);
+}
+
+.login-card h2 {
+  text-align: center;
+  margin-bottom: 24px;
+  color: rgb(104, 160, 243);
+  font-size: 1.6rem;
+}
+
+.login-form {
+  display: grid;
+  gap: 16px;
+}
+
+.form-field {
+  display: grid;
+  gap: 6px;
+}
+
+.password-field {
+  position: relative;
+}
+
+.form-input {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.18);
+  color: rgb(14, 12, 12);
+  padding: 12px 14px;
+  outline: none;
+}
+
+.password-field .form-input {
+  padding-right: 78px;
+}
+
+.form-input::placeholder {
+  color: rgba(12, 10, 10, 0.78);
+}
+
+.form-input:focus {
+  border-color: #93c5fd;
+  box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.24);
+}
+
+.show-password-btn {
+  position: absolute;
+  right: 10px;
+  top: 9px;
+  min-height: 30px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+}
+
+.remember-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.92rem;
+}
+
+.login-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.text-link {
+  padding: 0;
+  background: transparent;
+  color: #dbeafe;
+  cursor: pointer;
+  font-size: 0.92rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.text-link:hover {
+  color: white;
+}
+
+.login-submit {
+  min-height: 48px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: #4f46e5;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+
+.login-submit:hover {
+  background: #4338ca;
+}
+
+.login-submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid white;
+  border-top-color: transparent;
+  border-radius: 999px;
+  animation: spin 0.8s linear infinite;
+}
+
+.form-error {
+  color: #fecaca;
+  font-size: 0.86rem;
+  margin: 0;
+}
+
+.form-success {
+  color: #bbf7d0;
+  text-align: center;
+  font-size: 0.9rem;
+  margin: 14px 0 0;
+}
+
+.form-switch,
+.form-help {
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.92rem;
+  margin: 0;
+  text-align: center;
+}
+
+.form-help {
+  line-height: 1.5;
+}
+
+.acc-bar {
+  background: #20242c;
+  color: white;
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 5%;
+  gap: 12px;
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+
+.acc-btn {
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  background: transparent;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+
+.acc-btn:focus-visible,
+.burger:focus-visible,
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid #facc15;
+  outline-offset: 2px;
+}
+
+.burger {
+  background: transparent;
+  padding: 6px;
+}
+
+.burger span {
+  width: 25px;
+  height: 3px;
+  background-color: var(--secondary);
+  display: block;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.toggle .line1 {
+  transform: rotate(-45deg) translate(-6px, 6px);
+}
+
+.toggle .line2 {
+  opacity: 0;
+}
+
+.toggle .line3 {
+  transform: rotate(45deg) translate(-5px, -6px);
+}
+
+.nav-active {
+  transform: translateX(0%) !important;
 }
 
 @keyframes fadeIn {
@@ -56,73 +291,48 @@ h1, h2, h3, h4 {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-/* --- Soporte Responsive para el Layout (CSS clásico para el menú) --- */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @media (max-width: 768px) {
-  /* Mostrar burger */
   .burger {
     display: flex !important;
   }
 
-  /* Ocultar menú navegación por defecto en móvil */
   #nav-menu {
     position: absolute;
-    right: 0px;
-    height: 92vh;
-    top: 70px; /* Altura del header aprox */
+    right: 0;
+    height: calc(100vh - 70px);
+    top: 70px;
     background-color: var(--header-bg);
     display: flex;
     flex-direction: column;
-    width: 50%;
+    width: min(75vw, 320px);
     transform: translateX(100%);
-    transition: transform 0.5s ease-in;
-    box-shadow: -2px 5px 10px rgba(0,0,0,0.1);
-    padding: 40px 0;
+    transition: transform 0.35s ease;
+    box-shadow: -2px 5px 10px rgba(0, 0, 0, 0.12);
+    padding: 36px 0;
     gap: 10px;
   }
 
   #nav-menu li {
-    opacity: 0;
     width: 100%;
     text-align: center;
   }
-  
+
   #nav-menu a {
     display: block;
     padding: 15px;
     width: 100%;
   }
-}
-
-/* Clase para abrir el menú (se activa en Layout.jsx) */
-.nav-active {
-  transform: translateX(0%) !important;
-}
-
-/* Animación simple para los links del menú */
-@keyframes navLinkFade {
-  from {
-    opacity: 0;
-    transform: translateX(50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0px);
-  }
-}
-
-/* Estilos para el burger transformado en X */
-.toggle .line1 {
-  transform: rotate(-45deg) translate(-5px, 6px);
-}
-.toggle .line2 {
-  opacity: 0;
-}
-.toggle .line3 {
-  transform: rotate(45deg) translate(-5px, -6px);
 }

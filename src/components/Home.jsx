@@ -1,20 +1,22 @@
 import { useState } from 'react'
 import Layout from './Layout'
+import { useAuth } from './context/AuthContext'
 
 function Home() {
   const [fontSize, setFontSize] = useState(16)
   const [contrastMode, setContrastMode] = useState(false)
+  const { logout } = useAuth()
 
   const toggleContrast = () => {
     setContrastMode(!contrastMode)
   }
 
   const changeFontSize = (action) => {
-    setFontSize(prev => prev + (action * 2))
+    setFontSize(prev => Math.min(22, Math.max(14, prev + (action * 2))))
   }
 
   const handleLogout = () => {
-    window.location.href = '/'
+    logout()
   }
 
   const styles = {

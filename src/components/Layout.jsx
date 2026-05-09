@@ -1,28 +1,41 @@
-function Layout({ children, onLogout, onToggleContrast, onChangeFontSize }) {
+import { useState } from 'react'
+
+function Layout({ children, onLogout  }) {
+  const [menuOpen, setMenuOpen] = useState(false)
+
   return (
     <div>
       <div className="acc-bar">
-        <button className="acc-btn" onClick={onToggleContrast}>Alto Contraste</button>
-        <button className="acc-btn" onClick={() => onChangeFontSize(1)}>A+</button>
-        <button className="acc-btn" onClick={() => onChangeFontSize(-1)}>A-</button>
+        
         <button className="acc-btn" onClick={onLogout} style={{ background: '#e74c3c', border: 'none' }}>Salir</button>
       </div>
 
       <header id="main-header" style={styles.header}>
         <a href="#" className="logo" style={styles.logo}>DENT<span style={{ color: 'var(--primary)' }}>VISION</span></a>
         
-        <ul style={styles.navLinks} id="nav-menu">
+        <ul
+          className={menuOpen ? 'nav-active' : ''}
+          style={styles.navLinks}
+          id="nav-menu"
+        >
           <li><a href="#" style={styles.navLink}>Inicio</a></li>
           <li><a href="#" style={styles.navLink}>Servicios</a></li>
           <li><a href="#" style={styles.navLink}>Especialistas</a></li>
           <li><a href="#" style={styles.navLink}>Contacto</a></li>
         </ul>
 
-        <div className="burger" style={styles.burger} onClick="toggleMenu()">
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
+        <button
+          aria-label="Abrir menu de navegacion"
+          aria-expanded={menuOpen}
+          className={`burger ${menuOpen ? 'toggle' : ''}`}
+          style={styles.burger}
+          onClick={() => setMenuOpen((current) => !current)}
+          type="button"
+        >
+          <span className="line1"></span>
+          <span className="line2"></span>
+          <span className="line3"></span>
+        </button>
       </header>
 
       {children}

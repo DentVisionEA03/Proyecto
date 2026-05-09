@@ -1,18 +1,55 @@
-# React + Vite
+# DentVision
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicacion web en React para una plataforma de salud dental y visual. El proyecto incluye inicio de sesion, pantalla principal, secciones de servicios, estadisticas, accesibilidad basica y layout responsive.
 
-Currently, two official plugins are available:
+## Tecnologias
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React
+- Vite
+- CSS global con utilidades de Tailwind
+- ESLint
 
-## React Compiler
+## Requisitos
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+- Node.js instalado
+- npm instalado
 
-Note: This will impact Vite dev & build performances.
+## Instalacion
 
-## Expanding the ESLint configuration
+```bash
+npm install
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Ejecutar en desarrollo
+
+```bash
+npm run dev
+```
+
+Luego abre la URL que muestra Vite en la terminal.
+
+## Scripts
+
+```bash
+npm run dev
+npm run build
+npm run preview
+npm run lint
+```
+
+## Funcionalidades actuales
+
+- Login con validacion de correo y contrasena.
+- Opcion para mostrar u ocultar la contrasena.
+- Persistencia simple de sesion con `localStorage`.
+- Pantalla Home con servicios de salud dental y visual.
+- Barra de accesibilidad para alto contraste y cambio de tamano de fuente.
+- Menu responsive para moviles.
+
+## Mejoras pendientes recomendadas
+
+- Conectar el login a un backend real.
+- Crear flujo real para agenda de citas.
+- Agregar rutas con `react-router-dom` cuando existan mas pantallas.
+- Reemplazar textos de ejemplo por informacion real de la marca.
+- Agregar pruebas automatizadas para login, autenticacion y navegacion.
