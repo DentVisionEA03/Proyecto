@@ -1,7 +1,10 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
-function Layout({ children, onLogout  }) {
+function Layout({ children, isAdmin = false, onLogout  }) {
   const [menuOpen, setMenuOpen] = useState(false)
+
+  const closeMenu = () => setMenuOpen(false)
 
   return (
     <div>
@@ -11,17 +14,19 @@ function Layout({ children, onLogout  }) {
       </div>
 
       <header id="main-header" style={styles.header}>
-        <a href="#" className="logo" style={styles.logo}>DENT<span style={{ color: 'var(--primary)' }}>VISION</span></a>
+        <Link to="/home" className="logo" style={styles.logo} onClick={closeMenu}>DENT<span style={{ color: 'var(--primary)' }}>VISION</span></Link>
         
         <ul
           className={menuOpen ? 'nav-active' : ''}
           style={styles.navLinks}
           id="nav-menu"
         >
-          <li><a href="#" style={styles.navLink}>Inicio</a></li>
-          <li><a href="#" style={styles.navLink}>Servicios</a></li>
-          <li><a href="#" style={styles.navLink}>Especialistas</a></li>
-          <li><a href="#" style={styles.navLink}>Contacto</a></li>
+          <li><Link to="/home" style={styles.navLink} onClick={closeMenu}>Inicio</Link></li>
+          <li><Link to="/servicios" style={styles.navLink} onClick={closeMenu}>Servicios</Link></li>
+          <li><Link to="/especialistas" style={styles.navLink} onClick={closeMenu}>Especialistas</Link></li>
+          <li><Link to="/contacto" style={styles.navLink} onClick={closeMenu}>Contacto</Link></li>
+          <li><Link to="/citas" style={styles.navLink} onClick={closeMenu}>Citas</Link></li>
+          {isAdmin && <li><Link to="/admin" style={styles.navLink} onClick={closeMenu}>Admin</Link></li>}
         </ul>
 
         <button
@@ -49,10 +54,11 @@ function Layout({ children, onLogout  }) {
           <div style={styles.footerCol}>
             <h4 style={{ color: 'var(--primary)', marginBottom: '15px' }}>Enlaces rápidos</h4>
             <ul style={{ listStyle: 'none', padding: '0' }}>
-              <li style={{ marginBottom: '8px' }}><a href="#" style={{ color: '#ddd', textDecoration: 'none' }}>Inicio</a></li>
-              <li style={{ marginBottom: '8px' }}><a href="#" style={{ color: '#ddd', textDecoration: 'none' }}>Nuestros Servicios</a></li>
-              <li style={{ marginBottom: '8px' }}><a href="#" style={{ color: '#ddd', textDecoration: 'none' }}>Directorio de Especialistas</a></li>
-              <li style={{ marginBottom: '8px' }}><a href="#" style={{ color: '#ddd', textDecoration: 'none' }}>Preguntas Frecuentes</a></li>
+              <li style={{ marginBottom: '8px' }}><Link to="/home" style={{ color: '#ddd', textDecoration: 'none' }}>Inicio</Link></li>
+              <li style={{ marginBottom: '8px' }}><Link to="/servicios" style={{ color: '#ddd', textDecoration: 'none' }}>Nuestros Servicios</Link></li>
+              <li style={{ marginBottom: '8px' }}><Link to="/especialistas" style={{ color: '#ddd', textDecoration: 'none' }}>Directorio de Especialistas</Link></li>
+              <li style={{ marginBottom: '8px' }}><Link to="/citas" style={{ color: '#ddd', textDecoration: 'none' }}>Agendar cita</Link></li>
+              {isAdmin && <li style={{ marginBottom: '8px' }}><Link to="/admin" style={{ color: '#ddd', textDecoration: 'none' }}>Panel administrativo</Link></li>}
             </ul>
           </div>
           <div style={styles.footerCol}>

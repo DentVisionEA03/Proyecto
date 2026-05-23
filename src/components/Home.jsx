@@ -1,213 +1,104 @@
-import { useState } from 'react'
-import Layout from './Layout'
-import { useAuth } from './context/AuthContext'
+import { useNavigate } from 'react-router-dom'
+import { services, specialists } from '../data/clinicData'
+import AppLayout from './AppLayout'
 
 function Home() {
-  const [fontSize, setFontSize] = useState(16)
-  const [contrastMode, setContrastMode] = useState(false)
-  const { logout } = useAuth()
+  const navigate = useNavigate()
 
-  const toggleContrast = () => {
-    setContrastMode(!contrastMode)
-  }
-
-  const changeFontSize = (action) => {
-    setFontSize(prev => Math.min(22, Math.max(14, prev + (action * 2))))
-  }
-
-  const handleLogout = () => {
-    logout()
-  }
-
-  const styles = {
-    container: {
-      fontSize: `${fontSize}px`,
-      backgroundColor: contrastMode ? '#000' : 'var(--light)',
-      color: contrastMode ? '#fff' : 'var(--dark)',
-    },
-    root: {
-      '--primary': contrastMode ? '#ffff00' : '#00a8b5',
-      '--secondary': contrastMode ? '#ffffff' : '#004d84',
-      '--dark': contrastMode ? '#000000' : '#333',
-      '--light': contrastMode ? '#000000' : '#f4f7f6',
-      '--white': contrastMode ? '#000000' : '#ffffff',
-      '--header-bg': contrastMode ? '#000000' : 'rgba(255, 255, 255, 0.95)',
-    },
-    hero: {
-      height: '50vh',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      textAlign: 'center',
-      padding: '0 20px',
-      background: 'linear-gradient(135deg, rgba(0,77,132,0.1) 0%, rgba(0,168,181,0.1) 100%)',
-    },
-    heroTitle: {
-      color: 'var(--secondary)',
-      marginBottom: '10px',
-      fontSize: '2.5rem',
-    },
-    heroText: {
-      fontSize: '1.2rem',
-      maxWidth: '600px',
-    },
-    btnPrincipal: {
-      backgroundColor: 'var(--primary)',
-      color: 'var(--white)',
-      padding: '12px 25px',
-      textDecoration: 'none',
-      borderRadius: '5px',
-      fontWeight: 'bold',
-      marginTop: '20px',
-      border: 'none',
-      cursor: 'pointer',
-      fontSize: '1rem',
-    },
-    features: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-      gap: '30px',
-      padding: '60px 5%',
-      background: 'var(--white)',
-    },
-    featureCard: {
-      background: 'var(--light)',
-      padding: '30px',
-      borderRadius: '8px',
-      textAlign: 'center',
-      boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
-    },
-    featureTitle: {
-      color: 'var(--secondary)',
-      marginBottom: '15px',
-    },
-    stats: {
-      display: 'flex',
-      justifyContent: 'space-around',
-      flexWrap: 'wrap',
-      background: 'var(--secondary)',
-      color: 'var(--white)',
-      padding: '50px 5%',
-      textAlign: 'center',
-      gap: '30px',
-    },
-    statBox: {
-      textAlign: 'center',
-    },
-    statNumber: {
-      fontSize: '42px',
-      margin: '0 0 5px 0',
-      color: 'var(--primary)',
-    },
-    header: {
-      background: 'var(--header-bg)',
-      padding: '15px 5%',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      position: 'sticky',
-      top: 0,
-      boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
-      zIndex: 1000,
-    },
-    logo: {
-      fontSize: '22px',
-      fontWeight: 'bold',
-      color: 'var(--secondary)',
-      textDecoration: 'none',
-    },
-    navLinks: {
-      display: 'flex',
-      gap: '25px',
-      listStyle: 'none',
-      margin: 0,
-    },
-    navLink: {
-      textDecoration: 'none',
-      color: 'var(--dark)',
-      fontWeight: '600',
-      fontSize: '14px',
-    },
-    burger: {
-      display: 'none',
-      cursor: 'pointer',
-      flexDirection: 'column',
-      gap: '5px',
-    },
-    footer: {
-      background: '#2c3e50',
-      color: 'var(--white)',
-      padding: '50px 5% 20px',
-    },
-    footerContent: {
-      display: 'flex',
-      flexWrap: 'wrap',
-      justifyContent: 'space-between',
-      gap: '40px',
-      marginBottom: '30px',
-    },
-    footerCol: {
-      flex: 1,
-      minWidth: '250px',
-    },
-    footerBottom: {
-      textAlign: 'center',
-      borderTop: '1px solid #444',
-      paddingTop: '20px',
-      fontSize: '13px',
-    },
+  const goToAppointment = () => {
+    navigate('/citas')
   }
 
   return (
-    <div style={{ ...styles.container, ...styles.root }}>
-      <Layout 
-        onLogout={handleLogout}
-        onToggleContrast={toggleContrast}
-        onChangeFontSize={changeFontSize}
-      >
-        {/* Hero Section */}
-        <section style={styles.hero}>
-          <h1 style={styles.heroTitle}>Innovación en salud dental y visual</h1>
-          <p style={styles.heroText}>Atención integral y de calidad para toda tu familia en un solo lugar.</p>
-          <button style={styles.btnPrincipal} onClick={() => alert('Funcionalidad de agenda de citas')}>
-            Agenda tu cita
+    <AppLayout>
+      <section className="home-hero" id="inicio">
+        <div className="home-hero-content">
+          <span className="section-kicker">Salud integral</span>
+          <h1>Cuida tu sonrisa y tu vision en un solo lugar</h1>
+          <p>
+            DentVision conecta pacientes con especialistas dentales y visuales para agendar citas, consultar servicios y recibir atencion oportuna.
+          </p>
+          <div className="hero-actions">
+            <button className="primary-action" onClick={goToAppointment}>
+              Agenda tu cita
+            </button>
+            <button className="secondary-action" onClick={() => navigate('/especialistas')}>
+              Ver especialistas
+            </button>
+          </div>
+        </div>
+        <div className="hero-panel">
+          <div>
+            <strong>Hoy disponible</strong>
+            <span>12 cupos</span>
+          </div>
+          <div>
+            <strong>Especialidades</strong>
+            <span>Dental y visual</span>
+          </div>
+          <div>
+            <strong>Confirmacion</strong>
+            <span>Por correo o telefono</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="home-section">
+        <div className="section-heading">
+          <span className="section-kicker">Servicios principales</span>
+          <h2>Atencion para cada etapa de tu cuidado</h2>
+          <button className="text-action" onClick={() => navigate('/servicios')}>
+            Ver todos
           </button>
-        </section>
+        </div>
+        <div className="service-grid">
+          {services.slice(0, 3).map((service) => (
+            <article className="service-card" key={service.id}>
+              <span>{service.category}</span>
+              <h3>{service.title}</h3>
+              <p>{service.description}</p>
+              <small>{service.duration}</small>
+            </article>
+          ))}
+        </div>
+      </section>
 
-        {/* Features Section */}
-        <section style={styles.features}>
-          <div style={styles.featureCard}>
-            <h3 style={styles.featureTitle}>Salud Dental</h3>
-            <p>Odontología general, ortodoncia y estética dental con tecnología de vanguardia y profesionales calificados.</p>
-          </div>
-          <div style={styles.featureCard}>
-            <h3 style={styles.featureTitle}>Salud Visual</h3>
-            <p>Exámenes de optometría, diagnóstico preventivo y un amplio catálogo de monturas para todas las edades.</p>
-          </div>
-          <div style={styles.featureCard}>
-            <h3 style={styles.featureTitle}>Atención sin Esperas</h3>
-            <p>Accede directamente a especialistas de forma rápida y sin trámites complejos.</p>
-          </div>
-        </section>
+      <section className="home-section home-section-alt">
+        <div className="section-heading">
+          <span className="section-kicker">Equipo medico</span>
+          <h2>Especialistas listos para atenderte</h2>
+          <button className="text-action" onClick={() => navigate('/especialistas')}>
+            Ver directorio
+          </button>
+        </div>
+        <div className="specialist-grid">
+          {specialists.slice(0, 3).map((specialist) => (
+            <article className="specialist-card" key={specialist.id}>
+              <div className="specialist-avatar">{specialist.name.charAt(4)}</div>
+              <h3>{specialist.name}</h3>
+              <p>{specialist.specialty}</p>
+              <span>{specialist.location}</span>
+              <button onClick={() => navigate('/citas')}>Agendar</button>
+            </article>
+          ))}
+        </div>
+      </section>
 
-        {/* Stats Section */}
-        <section style={styles.stats}>
-          <div style={styles.statBox}>
-            <h2 style={styles.statNumber}>+50K</h2>
-            <p>Pacientes Atendidos</p>
-          </div>
-          <div style={styles.statBox}>
-            <h2 style={styles.statNumber}>+120</h2>
-            <p>Especialistas Aliados</p>
-          </div>
-          <div style={styles.statBox}>
-            <h2 style={styles.statNumber}>15</h2>
-            <p>Sedes a nivel nacional</p>
-          </div>
-        </section>
-      </Layout>
-    </div>
+      <section className="stats-band">
+        <div>
+          <strong>+50K</strong>
+          <span>Pacientes atendidos</span>
+        </div>
+        <div>
+          <strong>+120</strong>
+          <span>Especialistas aliados</span>
+        </div>
+        <div>
+          <strong>15</strong>
+          <span>Sedes a nivel nacional</span>
+        </div>
+      </section>
+    </AppLayout>
   )
 }
 

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { recoverPassword, registerUser } from "../services/authService";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -86,49 +87,64 @@ export default function Login({ onLogin }) {
     return Object.keys(err).length === 0;
   };
 
-  const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
 
     if (!validateLogin()) return;
 
     setLoading(true);
 
-    setTimeout(() => {
-      onLogin({ remember: form.remember });
-      setLoading(false);
+    try {
+      await onLogin({
+        email: form.email,
+        password: form.password,
+        remember: form.remember,
+      });
       setSuccessMessage("¡Inicio de sesión exitoso!");
-    }, 1200);
+    } catch (error) {
+      setErrors({ form: error.message || "No pudimos iniciar sesión" });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleRegisterSubmit = (e) => {
+  const handleRegisterSubmit = async (e) => {
     e.preventDefault();
 
     if (!validateRegister()) return;
 
     setLoading(true);
 
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      await registerUser(registerForm);
       setSuccessMessage("Registro exitoso. Ya puedes iniciar sesión.");
       setForm((current) => ({ ...current, email: registerForm.email }));
       setRegisterForm({ name: "", email: "", password: "" });
       setMode("login");
-    }, 900);
+    } catch (error) {
+      setErrors({ form: error.message || "No pudimos crear la cuenta" });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleRecoverSubmit = (e) => {
+  const handleRecoverSubmit = async (e) => {
     e.preventDefault();
 
     if (!validateRecover()) return;
 
     setLoading(true);
 
-    setTimeout(() => {
-      setLoading(false);
-      setSuccessMessage(`Enviamos instrucciones a ${recoverEmail}.`);
+    try {
+      const response = await recoverPassword({ email: recoverEmail });
+      setSuccessMessage(response.message || `Enviamos instrucciones a ${recoverEmail}.`);
       setRecoverEmail("");
       setMode("login");
-    }, 900);
+    } catch (error) {
+      setErrors({ form: error.message || "No pudimos enviar las instrucciones" });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -331,6 +347,12 @@ export default function Login({ onLogin }) {
         {successMessage && (
           <p className="form-success">
             {successMessage}
+          </p>
+        )}
+
+        {errors.form && (
+          <p className="form-error form-error-center">
+            {errors.form}
           </p>
         )}
       </div>
