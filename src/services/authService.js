@@ -16,6 +16,7 @@ export const loginUser = async ({ email, password }) => {
 
     return {
       token: `fake-jwt-${Date.now()}`,
+      expiresIn: 60 * 60 * 4,
       user: {
         id: normalizedEmail,
         name: normalizedEmail.split('@')[0],

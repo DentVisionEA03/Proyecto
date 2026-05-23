@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { services, specialists } from '../data/clinicData'
-import { createAppointment } from '../services/appointmentService'
+import { createAppointment, getAppointments } from '../services/appointmentService'
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const phoneRegex = /^[0-9\s()+-]{7,20}$/
@@ -20,6 +20,26 @@ const initialForm = {
 }
 
 const getTodayInputValue = () => new Date().toISOString().split('T')[0]
+const getSpecialistValue = (specialist) => `${specialist.name} - ${specialist.specialty}`
+
+const getServiceByTitle = (serviceTitle) =>
+  services.find((service) => service.title === serviceTitle)
+
+const isSunday = (date) => new Date(`${date}T00:00:00`).getDay() === 0
+
+const getSpecialistsForService = (serviceTitle) => {
+  const selectedService = getServiceByTitle(serviceTitle)
+
+  if (!selectedService) return specialists
+  if (selectedService.category === 'Integral') return specialists
+
+  return specialists.filter(
+    (specialist) =>
+      specialist.specialty === selectedService.title ||
+      (selectedService.category === 'Dental' && specialist.specialty !== 'Optometria') ||
+      (selectedService.category === 'Visual' && specialist.specialty === 'Optometria'),
+  )
+}
 
 function AppointmentForm({ onAppointmentCreated, userEmail, userId }) {
   const initialUserForm = useMemo(
@@ -31,10 +51,54 @@ function AppointmentForm({ onAppointmentCreated, userEmail, userId }) {
   const [appointment, setAppointment] = useState(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState('')
+  const [existingAppointments, setExistingAppointments] = useState([])
   const minDate = getTodayInputValue()
+  const filteredSpecialists = useMemo(
+    () => getSpecialistsForService(form.service),
+    [form.service],
+  )
+  const occupiedTimes = useMemo(() => {
+    if (!form.date || !form.specialist) return []
+
+    return existingAppointments
+      .filter(
+        (savedAppointment) =>
+          savedAppointment.status !== 'cancelled' &&
+          savedAppointment.appointment.date === form.date &&
+          savedAppointment.appointment.specialist === form.specialist,
+      )
+      .map((savedAppointment) => savedAppointment.appointment.time)
+  }, [existingAppointments, form.date, form.specialist])
+  const availableTimesForSelection = availableTimes.filter(
+    (time) => !occupiedTimes.includes(time),
+  )
+  const selectedService = getServiceByTitle(form.service)
+
+  useEffect(() => {
+    const loadAppointments = async () => {
+      try {
+        const savedAppointments = await getAppointments(userId)
+        setExistingAppointments(savedAppointments)
+      } catch {
+        setExistingAppointments([])
+      }
+    }
+
+    loadAppointments()
+  }, [userId])
 
   const updateField = (field, value) => {
-    setForm((current) => ({ ...current, [field]: value }))
+    setForm((current) => {
+      if (field === 'service') {
+        return { ...current, service: value, specialist: '', time: '' }
+      }
+
+      if (field === 'specialist' || field === 'date') {
+        return { ...current, [field]: value, time: '' }
+      }
+
+      return { ...current, [field]: value }
+    })
     setErrors((current) => ({ ...current, [field]: '' }))
     setSubmitError('')
   }
@@ -56,7 +120,9 @@ function AppointmentForm({ onAppointmentCreated, userEmail, userId }) {
     if (!form.specialist) nextErrors.specialist = 'Selecciona un especialista'
     if (!form.date) nextErrors.date = 'Selecciona una fecha'
     else if (form.date < minDate) nextErrors.date = 'Selecciona una fecha desde hoy'
+    else if (isSunday(form.date)) nextErrors.date = 'Selecciona una fecha de lunes a sabado'
     if (!form.time) nextErrors.time = 'Selecciona una hora'
+    else if (occupiedTimes.includes(form.time)) nextErrors.time = 'Esa hora ya esta ocupada'
 
     setErrors(nextErrors)
     return Object.keys(nextErrors).length === 0
@@ -90,6 +156,10 @@ function AppointmentForm({ onAppointmentCreated, userEmail, userId }) {
     try {
       const createdAppointment = await createAppointment(payload, userId)
       setAppointment(createdAppointment)
+      setExistingAppointments((currentAppointments) => [
+        createdAppointment,
+        ...currentAppointments,
+      ])
       onAppointmentCreated?.(createdAppointment)
       setForm(initialUserForm)
     } catch (error) {
@@ -192,11 +262,14 @@ function AppointmentForm({ onAppointmentCreated, userEmail, userId }) {
             <select
               className={errors.specialist ? 'field-error' : ''}
               value={form.specialist}
+              disabled={!form.service}
               onChange={(event) => updateField('specialist', event.target.value)}
             >
-              <option value="">Selecciona un especialista</option>
-              {specialists.map((specialist) => (
-                <option key={specialist.id} value={`${specialist.name} - ${specialist.specialty}`}>
+              <option value="">
+                {form.service ? 'Selecciona un especialista' : 'Elige primero un servicio'}
+              </option>
+              {filteredSpecialists.map((specialist) => (
+                <option key={specialist.id} value={getSpecialistValue(specialist)}>
                   {specialist.name} - {specialist.specialty}
                 </option>
               ))}
@@ -221,16 +294,22 @@ function AppointmentForm({ onAppointmentCreated, userEmail, userId }) {
             <select
               className={errors.time ? 'field-error' : ''}
               value={form.time}
+              disabled={!form.specialist || !form.date}
               onChange={(event) => updateField('time', event.target.value)}
             >
-              <option value="">Selecciona una hora</option>
-              {availableTimes.map((time) => (
+              <option value="">
+                {form.specialist && form.date ? 'Selecciona una hora' : 'Elige fecha y especialista'}
+              </option>
+              {availableTimesForSelection.map((time) => (
                 <option key={time} value={time}>
                   {time}
                 </option>
               ))}
             </select>
             {errors.time && <span>{errors.time}</span>}
+            {!errors.time && form.specialist && form.date && availableTimesForSelection.length === 0 && (
+              <span>No hay horarios disponibles para esta fecha</span>
+            )}
           </label>
         </div>
 
@@ -244,6 +323,14 @@ function AppointmentForm({ onAppointmentCreated, userEmail, userId }) {
           />
           <small>{form.notes.length}/180 caracteres</small>
         </label>
+
+        {form.service && form.specialist && form.date && form.time && (
+          <div className="appointment-summary" aria-live="polite">
+            <strong>Resumen:</strong> {form.service} con {form.specialist}, el {form.date} a las{' '}
+            {form.time}
+            {selectedService?.duration ? ` (${selectedService.duration}).` : '.'}
+          </div>
+        )}
 
         <button className="appointment-submit" type="submit" disabled={isSubmitting}>
           {isSubmitting ? 'Agendando...' : 'Confirmar cita'}

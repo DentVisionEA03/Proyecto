@@ -102,6 +102,12 @@ p {
   gap: 6px;
 }
 
+.field-label {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
 .password-field {
   position: relative;
 }
@@ -133,7 +139,7 @@ p {
 .show-password-btn {
   position: absolute;
   right: 10px;
-  top: 9px;
+  top: 34px;
   min-height: 30px;
   padding: 4px 8px;
   border-radius: 6px;
@@ -655,6 +661,12 @@ p {
   box-shadow: 0 0 0 3px rgba(0, 168, 181, 0.16);
 }
 
+.appointment-field select:disabled {
+  cursor: not-allowed;
+  background: #edf4f7;
+  color: #64748b;
+}
+
 .appointment-field input.field-error,
 .appointment-field select.field-error,
 .appointment-field textarea.field-error {
@@ -677,6 +689,16 @@ p {
 
 .appointment-notes {
   margin-top: 18px;
+}
+
+.appointment-summary {
+  margin-top: 18px;
+  border: 1px solid #bee7ec;
+  border-radius: 6px;
+  background: #ecfeff;
+  color: #164e63;
+  padding: 14px 16px;
+  line-height: 1.5;
 }
 
 .appointment-submit {
@@ -885,7 +907,7 @@ p {
 
 .admin-stats {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
   margin-bottom: 24px;
 }
@@ -909,6 +931,41 @@ p {
   color: var(--secondary);
   font-size: 2.1rem;
   line-height: 1;
+}
+
+.admin-workspace {
+  display: grid;
+  gap: 18px;
+}
+
+.admin-controls {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(160px, 0.32fr) minmax(160px, 0.32fr);
+  gap: 14px;
+  border: 1px solid #d9ecef;
+  border-radius: 8px;
+  background: white;
+  padding: 16px;
+  box-shadow: 0 10px 28px rgba(0, 77, 132, 0.07);
+}
+
+.admin-controls label {
+  display: grid;
+  gap: 7px;
+  color: #243447;
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.admin-controls input,
+.admin-controls select {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid #cbdde2;
+  border-radius: 6px;
+  background: #fbfeff;
+  color: #102030;
+  padding: 10px 12px;
 }
 
 .admin-table {
@@ -959,7 +1016,8 @@ p {
 }
 
 .admin-confirm,
-.admin-delete {
+.admin-delete,
+.admin-lab {
   min-height: 38px;
   border-radius: 6px;
   padding: 0 12px;
@@ -977,10 +1035,221 @@ p {
   color: #be123c;
 }
 
+.admin-lab {
+  background: #e0f2fe;
+  color: #075985;
+}
+
 .admin-confirm:disabled,
-.admin-delete:disabled {
+.admin-delete:disabled,
+.admin-lab:disabled {
   cursor: not-allowed;
   opacity: 0.65;
+}
+
+.admin-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+  background: rgba(15, 23, 42, 0.48);
+  padding: 20px;
+}
+
+.admin-modal {
+  width: min(100%, 440px);
+  border-radius: 8px;
+  background: white;
+  padding: 24px;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.28);
+}
+
+.admin-modal h2 {
+  color: var(--secondary);
+  margin-bottom: 10px;
+}
+
+.admin-modal p {
+  color: #526579;
+  margin-bottom: 20px;
+}
+
+.admin-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.admin-lab-modal {
+  width: min(100%, 640px);
+}
+
+.admin-lab-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.laboratory-page {
+  min-height: calc(100vh - 80px);
+  padding: 56px 5% 70px;
+  background: #f8fbfc;
+}
+
+.laboratory-hero {
+  margin-bottom: 24px;
+}
+
+.laboratory-hero h1 {
+  color: var(--secondary);
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.08;
+  margin-bottom: 10px;
+}
+
+.laboratory-hero p {
+  max-width: 760px;
+  color: #526579;
+  margin-bottom: 0;
+}
+
+.laboratory-layout {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.85fr) minmax(420px, 1.15fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.laboratory-form,
+.laboratory-board {
+  border: 1px solid #d9ecef;
+  border-radius: 8px;
+  background: white;
+  padding: 24px;
+  box-shadow: 0 14px 34px rgba(0, 77, 132, 0.08);
+}
+
+.laboratory-board {
+  display: grid;
+  gap: 18px;
+}
+
+.laboratory-board .admin-controls {
+  box-shadow: none;
+  padding: 0;
+  border: 0;
+  grid-template-columns: minmax(220px, 1fr) minmax(160px, 0.35fr);
+}
+
+.laboratory-cases {
+  display: grid;
+  gap: 14px;
+}
+
+.laboratory-card {
+  display: grid;
+  gap: 16px;
+  border: 1px solid #d9ecef;
+  border-radius: 8px;
+  background: #fbfeff;
+  padding: 18px;
+}
+
+.laboratory-card h3 {
+  color: var(--secondary);
+  margin: 8px 0 4px;
+}
+
+.laboratory-card p {
+  color: #526579;
+  margin-bottom: 0;
+}
+
+.laboratory-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.laboratory-details div {
+  display: grid;
+  gap: 4px;
+}
+
+.laboratory-details dt {
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.laboratory-details dd {
+  color: #102030;
+  margin: 0;
+  font-weight: 700;
+}
+
+.laboratory-notes {
+  border-left: 3px solid var(--primary);
+  padding-left: 12px;
+}
+
+.laboratory-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.laboratory-actions select {
+  min-height: 38px;
+  min-width: 190px;
+  border: 1px solid #cbdde2;
+  border-radius: 6px;
+  background: white;
+  color: #102030;
+  padding: 8px 10px;
+}
+
+.lab-status-received {
+  background: #e0f2fe;
+  color: #075985;
+}
+
+.lab-status-design,
+.lab-status-manufacturing {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.lab-status-quality {
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
+.lab-status-ready {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.lab-status-delivered {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.lab-status-adjustment,
+.lab-delayed {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.lab-delayed {
+  width: fit-content;
+  border-radius: 999px;
+  padding: 2px 8px;
 }
 
 .acc-bar {
@@ -1001,6 +1270,11 @@ p {
   color: white;
   padding: 4px 10px;
   border-radius: 4px;
+}
+
+.acc-btn-danger {
+  background: #e74c3c;
+  border-color: #e74c3c;
 }
 
 .acc-btn:focus-visible,
@@ -1153,8 +1427,40 @@ input:focus-visible {
     padding: 44px 20px 54px;
   }
 
+  .laboratory-page {
+    padding: 44px 20px 54px;
+  }
+
   .admin-stats {
     grid-template-columns: 1fr;
+  }
+
+  .admin-controls,
+  .laboratory-board .admin-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .laboratory-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .laboratory-form,
+  .laboratory-board {
+    padding: 20px;
+  }
+
+  .laboratory-details {
+    grid-template-columns: 1fr;
+  }
+
+  .laboratory-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .laboratory-actions select,
+  .laboratory-actions button {
+    width: 100%;
   }
 
   .admin-table-head {
@@ -1170,7 +1476,17 @@ input:focus-visible {
   }
 
   .admin-confirm,
-  .admin-delete {
+  .admin-delete,
+  .admin-lab {
     flex: 1;
+  }
+
+  .admin-modal-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .admin-lab-grid {
+    grid-template-columns: 1fr;
   }
 }
