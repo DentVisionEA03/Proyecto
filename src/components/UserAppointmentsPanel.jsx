@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
-import { cancelAppointment, getAppointments } from '../services/appointmentService'
+import { getAppointments, updateAppointmentStatus } from '../services/appointmentService'
 
 const statusLabels = {
   pending: 'Pendiente',
   confirmed: 'Confirmada',
+  cancelled: 'Cancelada',
 }
 
 const formatDate = (date) => {
@@ -45,9 +46,13 @@ function UserAppointmentsPanel({ refreshKey = 0, userId }) {
     setError('')
 
     try {
-      await cancelAppointment(appointmentId, userId)
+      const updatedAppointment = await updateAppointmentStatus(appointmentId, 'cancelled', userId)
       setAppointments((currentAppointments) =>
-        currentAppointments.filter((appointment) => appointment.id !== appointmentId),
+        currentAppointments.map((appointment) =>
+          appointment.id === appointmentId
+            ? { ...appointment, ...updatedAppointment }
+            : appointment,
+        ),
       )
     } catch (cancelError) {
       setError(cancelError.message || 'No pudimos cancelar la cita.')
@@ -106,11 +111,15 @@ function UserAppointmentsPanel({ refreshKey = 0, userId }) {
 
                 <button
                   className="appointment-cancel"
-                  disabled={cancellingId === appointment.id}
+                  disabled={cancellingId === appointment.id || appointment.status === 'cancelled'}
                   onClick={() => handleCancel(appointment.id)}
                   type="button"
                 >
-                  {cancellingId === appointment.id ? 'Cancelando...' : 'Cancelar'}
+                  {appointment.status === 'cancelled'
+                    ? 'Cancelada'
+                    : cancellingId === appointment.id
+                      ? 'Cancelando...'
+                      : 'Cancelar'}
                 </button>
               </article>
             )

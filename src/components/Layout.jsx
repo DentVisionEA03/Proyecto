@@ -1,32 +1,63 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 
-function Layout({ children, isAdmin = false, onLogout  }) {
+const navItems = [
+  { to: '/home', label: 'Inicio' },
+  { to: '/servicios', label: 'Servicios' },
+  { to: '/especialistas', label: 'Especialistas' },
+  { to: '/contacto', label: 'Contacto' },
+  { to: '/citas', label: 'Citas' },
+]
+
+function Layout({ children, isAdmin = false, onLogout }) {
   const [menuOpen, setMenuOpen] = useState(false)
 
   const closeMenu = () => setMenuOpen(false)
+  const getNavLinkStyle = ({ isActive }) => ({
+    ...styles.navLink,
+    ...(isActive ? styles.activeNavLink : {}),
+  })
 
   return (
     <div>
       <div className="acc-bar">
         
-        <button className="acc-btn" onClick={onLogout} style={{ background: '#e74c3c', border: 'none' }}>Salir</button>
+        <button className="acc-btn acc-btn-danger" onClick={onLogout} type="button">
+          Salir
+        </button>
       </div>
 
       <header id="main-header" style={styles.header}>
-        <Link to="/home" className="logo" style={styles.logo} onClick={closeMenu}>DENT<span style={{ color: 'var(--primary)' }}>VISION</span></Link>
+        <Link to="/home" className="logo" style={styles.logo} onClick={closeMenu}>
+          DENT<span style={{ color: 'var(--primary)' }}>VISION</span>
+        </Link>
         
         <ul
           className={menuOpen ? 'nav-active' : ''}
           style={styles.navLinks}
           id="nav-menu"
         >
-          <li><Link to="/home" style={styles.navLink} onClick={closeMenu}>Inicio</Link></li>
-          <li><Link to="/servicios" style={styles.navLink} onClick={closeMenu}>Servicios</Link></li>
-          <li><Link to="/especialistas" style={styles.navLink} onClick={closeMenu}>Especialistas</Link></li>
-          <li><Link to="/contacto" style={styles.navLink} onClick={closeMenu}>Contacto</Link></li>
-          <li><Link to="/citas" style={styles.navLink} onClick={closeMenu}>Citas</Link></li>
-          {isAdmin && <li><Link to="/admin" style={styles.navLink} onClick={closeMenu}>Admin</Link></li>}
+          {navItems.map((item) => (
+            <li key={item.to}>
+              <NavLink to={item.to} style={getNavLinkStyle} onClick={closeMenu}>
+                {item.label}
+              </NavLink>
+            </li>
+          ))}
+          {isAdmin && (
+            <>
+              <li>
+                <NavLink to="/admin" style={getNavLinkStyle} onClick={closeMenu}>
+                  Admin
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/laboratorio" style={getNavLinkStyle} onClick={closeMenu}>
+                  Laboratorio
+                </NavLink>
+              </li>
+            </>
+          )}
         </ul>
 
         <button
@@ -59,6 +90,7 @@ function Layout({ children, isAdmin = false, onLogout  }) {
               <li style={{ marginBottom: '8px' }}><Link to="/especialistas" style={{ color: '#ddd', textDecoration: 'none' }}>Directorio de Especialistas</Link></li>
               <li style={{ marginBottom: '8px' }}><Link to="/citas" style={{ color: '#ddd', textDecoration: 'none' }}>Agendar cita</Link></li>
               {isAdmin && <li style={{ marginBottom: '8px' }}><Link to="/admin" style={{ color: '#ddd', textDecoration: 'none' }}>Panel administrativo</Link></li>}
+              {isAdmin && <li style={{ marginBottom: '8px' }}><Link to="/laboratorio" style={{ color: '#ddd', textDecoration: 'none' }}>Laboratorio odontologico</Link></li>}
             </ul>
           </div>
           <div style={styles.footerCol}>
@@ -103,6 +135,12 @@ const styles = {
     color: 'var(--dark)',
     fontWeight: '600',
     fontSize: '14px',
+    borderBottom: '2px solid transparent',
+    paddingBottom: '4px',
+  },
+  activeNavLink: {
+    color: 'var(--secondary)',
+    borderBottomColor: 'var(--primary)',
   },
   burger: {
     display: 'none',

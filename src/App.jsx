@@ -4,6 +4,7 @@ import AdminDashboard from './components/AdminDashboard'
 import AppointmentPage from './components/AppointmentPage'
 import ContactPage from './components/ContactPage'
 import Home from './components/Home'
+import LaboratoryPage from './components/LaboratoryPage'
 import Login from './components/Login_inicio_sesion'
 import ServicesPage from './components/ServicesPage'
 import SpecialistsPage from './components/SpecialistsPage'
@@ -58,6 +59,10 @@ function AppContent() {
         <Route
           path="/admin"
           element={adminRoute(isAuthenticated, isAdmin, <AdminDashboard />)}
+        />
+        <Route
+          path="/laboratorio"
+          element={adminRoute(isAuthenticated, isAdmin, <LaboratoryPage />)}
         />
         <Route
           path="/agenda"
